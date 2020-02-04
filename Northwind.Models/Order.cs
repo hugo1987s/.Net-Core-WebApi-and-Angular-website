@@ -1,4 +1,6 @@
-﻿namespace Northwind.Models
+﻿using System;
+
+namespace Northwind.Models
 {
     public class Order
     {
