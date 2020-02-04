@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.30" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Northwind.Repositories\Northwind.Repositories.csproj" />
   </ItemGroup>
 
 </Project>
