@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Northwind.Models\Northwind.Models.csproj" />
+    <ProjectReference Include="..\Northwind.Repositories\Northwind.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>
