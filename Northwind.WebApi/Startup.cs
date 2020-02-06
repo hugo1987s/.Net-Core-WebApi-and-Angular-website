@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Northwind.DataAccess;
 using Northwind.UnitOfWork;
+using Northwind.WebApi.Authentication;
 
 namespace Northwind.WebApi
 {
@@ -28,6 +31,26 @@ namespace Northwind.WebApi
             services.AddSingleton<IUnitOfWork>(option => new NorthwindUnitOfWork(
                     Configuration.GetConnectionString("Northwind")
                 ));
+     
+
+            var tokenProvider = new JwtProvider("issuer", "audience", "northwind_2019");
+            services.AddSingleton<ITokenProvider>(tokenProvider);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                options => {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = tokenProvider.GetValidationParameters();
+                });
+
+
+            services.AddAuthorization(auth => {
+                auth.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .Build();
+            });
+
+
             services.AddMvc();
         }
 
@@ -39,6 +62,7 @@ namespace Northwind.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
